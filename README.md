@@ -1,10 +1,13 @@
 # roborock
 Roborock Q7 testing repo
-copy to /config/custom_components/roborock
-restart home assistant
-add integration roborock
-tested with Q7
 
+# Install
+1. copy to /config/custom_components/roborock
+2. restart home assistant
+3. add integration roborock
+4. tested with Q7
+
+# Info 
 roborock.vacuum.sc01
 by Roborock
 Firmware: 03.01.71
