@@ -11,7 +11,7 @@ Roborock Q7 testing repo
 roborock.vacuum.sc01 by Roborock
 Firmware: 03.01.71
 
-bBasic functions works
+Basic functions works
 Start, Stop and go to Dock/home
 Status docked
 
