@@ -1,10 +1,12 @@
 """Support for Roborock select."""
 
+from typing import Any
 import asyncio
 from collections.abc import Callable
 from dataclasses import dataclass
 
 from roborock.data import RoborockDockDustCollectionModeCode
+from roborock.data.b01_q7.b01_q7_code_mappings import WaterLevelMapping
 from roborock.devices.traits.v1 import PropertiesApi
 from roborock.devices.traits.v1.home import HomeTrait
 from roborock.devices.traits.v1.maps import MapsTrait
@@ -18,8 +20,12 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DOMAIN, MAP_SLEEP
-from .coordinator import RoborockConfigEntry, RoborockDataUpdateCoordinator
-from .entity import RoborockCoordinatedEntityV1
+from .coordinator import (
+    RoborockConfigEntry,
+    RoborockDataUpdateCoordinator,
+    RoborockDataUpdateCoordinatorB01,
+)
+from .entity import RoborockCoordinatedEntityV1, RoborockCoordinatedEntityB01
 
 PARALLEL_UPDATES = 0
 
@@ -42,6 +48,20 @@ class RoborockSelectDescription(SelectEntityDescription):
 
     is_dock_entity: bool = False
     """Whether this entity is for the dock."""
+
+
+@dataclass(frozen=True, kw_only=True)
+class RoborockSelectDescriptionB01(SelectEntityDescription):
+    """Class to describe a Roborock B01 select entity."""
+
+    value_fn: Callable[[Any], str | None]
+    """Function to get the current value of the select entity."""
+
+    options_lambda: Callable[[], list[str]]
+    """Function to get all options of the select entity."""
+
+    set_fn: Callable[[Any, str], Any]
+    """Function to set the option."""
 
 
 SELECT_DESCRIPTIONS: list[RoborockSelectDescription] = [
@@ -89,6 +109,19 @@ SELECT_DESCRIPTIONS: list[RoborockSelectDescription] = [
     ),
 ]
 
+Q7_SELECT_DESCRIPTIONS: list[RoborockSelectDescriptionB01] = [
+    RoborockSelectDescriptionB01(
+        key="water_level",
+        translation_key="mop_intensity",
+        value_fn=lambda data: getattr(data, "water_level_name", None),
+        options_lambda=lambda: [mode.name for mode in WaterLevelMapping],
+        set_fn=lambda device, option: device.b01_q7_properties.set_water_level(
+            WaterLevelMapping[option]
+        ),
+        entity_category=EntityCategory.CONFIG,
+    ),
+]
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -113,6 +146,12 @@ async def async_setup_entry(
         for coordinator in config_entry.runtime_data.v1
         if (home_trait := coordinator.properties_api.home) is not None
         if (map_trait := coordinator.properties_api.maps) is not None
+    )
+
+    async_add_entities(
+        RoborockSelectEntityB01(coordinator, description)
+        for coordinator in config_entry.runtime_data.b01
+        for description in Q7_SELECT_DESCRIPTIONS
     )
 
 
@@ -149,6 +188,34 @@ class RoborockSelectEntity(RoborockCoordinatedEntityV1, SelectEntity):
     def current_option(self) -> str | None:
         """Get the current status of the select entity from device props."""
         return self.entity_description.value_fn(self.coordinator.properties_api)
+
+
+class RoborockSelectEntityB01(RoborockCoordinatedEntityB01, SelectEntity):
+    """A class to let you set options on a Roborock B01 vacuum."""
+
+    entity_description: RoborockSelectDescriptionB01
+
+    def __init__(
+        self,
+        coordinator: RoborockDataUpdateCoordinatorB01,
+        entity_description: RoborockSelectDescriptionB01,
+    ) -> None:
+        """Create a select entity."""
+        self.entity_description = entity_description
+        super().__init__(
+            f"{entity_description.key}_{coordinator.duid_slug}",
+            coordinator,
+        )
+        self._attr_options = entity_description.options_lambda()
+
+    async def async_select_option(self, option: str) -> None:
+        """Set the option."""
+        await self.entity_description.set_fn(self.coordinator.device, option)
+
+    @property
+    def current_option(self) -> str | None:
+        """Get the current status of the select entity from device props."""
+        return self.entity_description.value_fn(self.coordinator.data)
 
 
 class RoborockCurrentMapSelectEntity(RoborockCoordinatedEntityV1, SelectEntity):

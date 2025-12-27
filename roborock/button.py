@@ -18,8 +18,12 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DOMAIN
-from .coordinator import RoborockConfigEntry, RoborockDataUpdateCoordinator
-from .entity import RoborockEntity, RoborockEntityV1
+from .coordinator import (
+    RoborockConfigEntry,
+    RoborockDataUpdateCoordinator,
+    RoborockDataUpdateCoordinatorB01,
+)
+from .entity import RoborockEntity, RoborockEntityV1, RoborockCoordinatedEntityB01
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -65,6 +69,23 @@ CONSUMABLE_BUTTON_DESCRIPTIONS = [
 ]
 
 
+@dataclass(frozen=True, kw_only=True)
+class RoborockButtonDescriptionB01(ButtonEntityDescription):
+    """Describes a Roborock B01 button entity."""
+
+    press_fn: Callable[[Any], Any]
+
+
+Q7_BUTTON_DESCRIPTIONS: list[RoborockButtonDescriptionB01] = [
+    RoborockButtonDescriptionB01(
+        key="find_me",
+        translation_key="find_me",
+        press_fn=lambda device: device.b01_q7_properties.find_me(),
+        entity_category=EntityCategory.CONFIG,
+    ),
+]
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: RoborockConfigEntry,
@@ -99,6 +120,12 @@ async def async_setup_entry(
                 for routine in routines
             ),
         )
+    )
+
+    async_add_entities(
+        RoborockButtonEntityB01(coordinator, description)
+        for coordinator in config_entry.runtime_data.b01
+        for description in Q7_BUTTON_DESCRIPTIONS
     )
 
 
@@ -160,3 +187,25 @@ class RoborockRoutineButtonEntity(RoborockEntity, ButtonEntity):
     async def async_press(self, **kwargs: Any) -> None:
         """Press the button."""
         await self._coordinator.execute_routines(self._routine_id)
+
+
+class RoborockButtonEntityB01(RoborockCoordinatedEntityB01, ButtonEntity):
+    """A class to define Roborock B01 button entities."""
+
+    entity_description: RoborockButtonDescriptionB01
+
+    def __init__(
+        self,
+        coordinator: RoborockDataUpdateCoordinatorB01,
+        entity_description: RoborockButtonDescriptionB01,
+    ) -> None:
+        """Create a button entity."""
+        super().__init__(
+            f"{entity_description.key}_{coordinator.duid_slug}",
+            coordinator,
+        )
+        self.entity_description = entity_description
+
+    async def async_press(self) -> None:
+        """Press the button."""
+        await self.entity_description.press_fn(self.coordinator.device)

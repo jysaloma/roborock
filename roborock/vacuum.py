@@ -46,6 +46,7 @@ class RoborockVacuum(RoborockCoordinatedEntityB01, StateVacuumEntity):
     _attr_supported_features = (
         VacuumEntityFeature.START
         | VacuumEntityFeature.STOP
+        | VacuumEntityFeature.PAUSE
         | VacuumEntityFeature.RETURN_HOME
         | VacuumEntityFeature.FAN_SPEED
     )
@@ -66,11 +67,11 @@ class RoborockVacuum(RoborockCoordinatedEntityB01, StateVacuumEntity):
         # Based on sensor.py: value_fn=lambda data: getattr(data, "status_name", None)
         status_name = getattr(self.coordinator.data, "status_name", None)
         
-        if status_name == "cleaning":
+        if status_name in ["cleaning", "sweep_moping", "sweep_moping_2", "moping", "sweeping"]:
             return VacuumActivity.CLEANING
-        if status_name == "docked" or status_name == "charging":
+        if status_name in ["docked", "charging", "mop_cleaning", "mop_airdrying"]:
             return VacuumActivity.DOCKED
-        if status_name == "returning":
+        if status_name in ["returning", "docking"]:
             return VacuumActivity.RETURNING
         if status_name == "error":
             return VacuumActivity.ERROR
@@ -104,6 +105,10 @@ class RoborockVacuum(RoborockCoordinatedEntityB01, StateVacuumEntity):
     async def async_start(self):
         _LOGGER.debug("Starting vacuum %s", self.name)
         await self.coordinator.device.b01_q7_properties.start_clean()
+
+    async def async_pause(self):
+        _LOGGER.debug("Pausing vacuum %s", self.name)
+        await self.coordinator.device.b01_q7_properties.pause_clean()
 
     async def async_stop(self):
         _LOGGER.debug("Stopping vacuum %s", self.name)

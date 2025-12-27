@@ -1,8 +1,8 @@
 {
   "config": {
     "abort": {
-      "already_configured_account": "[%key:common::config_flow::abort::already_configured_account%]",
-      "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]",
+      "already_configured_account": "Account is already configured",
+      "reauth_successful": "Re-authentication was successful",
       "wrong_account": "Wrong account: Please authenticate with the right account."
     },
     "error": {
@@ -10,7 +10,7 @@
       "invalid_email": "There is no account associated with the email you entered, please try again.",
       "invalid_email_format": "There is an issue with the formatting of your email - please try again.",
       "too_frequent_code_requests": "You have attempted to request too many codes. Try again later.",
-      "unknown": "[%key:common::config_flow::error::unknown%]",
+      "unknown": "Unexpected error",
       "unknown_roborock": "There was an unknown Roborock exception - please check your logs.",
       "unknown_url": "There was an issue determining the correct URL for your Roborock account - please check your logs."
     },
@@ -26,11 +26,11 @@
       },
       "reauth_confirm": {
         "description": "The Roborock integration needs to re-authenticate your account",
-        "title": "[%key:common::config_flow::title::reauth%]"
+        "title": "Re-authenticate Integration"
       },
       "user": {
         "data": {
-          "username": "[%key:common::config_flow::data::email%]"
+          "username": "Email"
         },
         "data_description": {
           "username": "The email address used to sign in to the Roborock app."
@@ -80,27 +80,27 @@
       "dust_collection_mode": {
         "name": "Empty mode",
         "state": {
-          "balanced": "[%key:component::roborock::entity::vacuum::roborock::state_attributes::fan_speed::state::balanced%]",
+          "balanced": "Balanced",
           "light": "Light",
-          "max": "[%key:component::roborock::entity::select::mop_intensity::state::max%]",
+          "max": "Max",
           "smart": "Smart"
         }
       },
       "mop_intensity": {
         "name": "Mop intensity",
         "state": {
-          "custom": "[%key:component::roborock::entity::select::mop_mode::state::custom%]",
+          "custom": "Custom",
           "custom_water_flow": "Custom water flow",
           "extreme": "Extreme",
-          "high": "[%key:common::state::high%]",
+          "high": "High",
           "intense": "Intense",
-          "low": "[%key:common::state::low%]",
+          "low": "Low",
           "max": "Max",
-          "medium": "[%key:common::state::medium%]",
+          "medium": "Medium",
           "mild": "Mild",
           "moderate": "Moderate",
-          "off": "[%key:common::state::off%]",
-          "smart_mode": "[%key:component::roborock::entity::select::mop_mode::state::smart_mode%]",
+          "off": "Off",
+          "smart_mode": "Smart mode",
           "vac_followed_by_mop": "Vacuum followed by mop"
         }
       },
@@ -124,8 +124,8 @@
         "name": "Error",
         "state": {
           "battery_temperature_protection": "Battery temperature protection",
-          "battery_temperature_protection_2": "[%key:component::roborock::entity::sensor::a01_error::state::battery_temperature_protection%]",
-          "battery_temperature_protection_e0": "[%key:component::roborock::entity::sensor::a01_error::state::temperature_protection%]",
+          "battery_temperature_protection_2": "Battery temperature protection",
+          "battery_temperature_protection_e0": "Temperature protection",
           "battery_under_10": "Battery under 10%",
           "clean_head_entangled": "Cleaning head entangled",
           "clean_head_too_hot": "Cleaning head too hot.",
@@ -133,11 +133,11 @@
           "cleaning_head_blocked": "Cleaning head blocked",
           "dirty_charging_contacts": "Clean charging contacts",
           "dirty_tank_full": "Dirty tank full",
-          "fan_protection_e4": "[%key:component::roborock::entity::sensor::a01_error::state::fan_protection_e5%]",
+          "fan_protection_e4": "Fan protection",
           "fan_protection_e5": "Fan protection",
-          "fan_protection_e9": "[%key:component::roborock::entity::sensor::a01_error::state::fan_protection_e5%]",
-          "low_battery": "[%key:component::roborock::entity::sensor::vacuum_error::state::low_battery%]",
-          "none": "[%key:component::roborock::entity::sensor::vacuum_error::state::none%]",
+          "fan_protection_e9": "Fan protection",
+          "low_battery": "Low battery",
+          "none": "None",
           "power_adapter_error": "Power adapter error",
           "temperature_protection": "Temperature protection",
           "water_level_sensor_stuck": "Water level sensor stuck."
@@ -146,7 +146,7 @@
       "a01_status": {
         "name": "Status",
         "state": {
-          "charging": "[%key:common::state::charging%]",
+          "charging": "Charging",
           "drying": "Drying",
           "dusting_mode": "Dusting mode",
           "fetch_failed": "Fetch failed",
@@ -159,8 +159,8 @@
           "self_clean_deep_cleaning": "Self-clean deep cleaning",
           "self_clean_dehydrating": "Self-clean drying",
           "self_clean_rinsing": "Self-clean rinsing",
-          "unknown": "[%key:component::roborock::entity::sensor::status::state::unknown%]",
-          "updating": "[%key:component::roborock::entity::sensor::status::state::updating%]",
+          "unknown": "Unknown",
+          "updating": "Updating",
           "ventilating": "Ventilating",
           "washing": "Washing"
         }
@@ -219,16 +219,16 @@
       "q7_status": {
         "name": "Status",
         "state": {
-          "charging": "[%key:common::state::charging%]",
-          "docking": "[%key:component::roborock::entity::sensor::status::state::docking%]",
+          "charging": "Charging",
+          "docking": "Docking",
           "mop_airdrying": "Mop air drying",
           "mop_cleaning": "Mop cleaning",
           "moping": "Mopping",
-          "paused": "[%key:common::state::paused%]",
+          "paused": "Paused",
           "sleeping": "Sleeping",
           "sweep_moping": "Sweep mopping",
           "sweep_moping_2": "Sweep mopping",
-          "updating": "[%key:component::roborock::entity::sensor::status::state::updating%]",
+          "updating": "Updating",
           "waiting_for_orders": "Waiting for orders"
         }
       },
@@ -244,7 +244,7 @@
           "air_drying_stopping": "Air drying stopping",
           "attaching_the_mop": "Attaching the mop",
           "charger_disconnected": "Charger disconnected",
-          "charging": "[%key:common::state::charging%]",
+          "charging": "Charging",
           "charging_complete": "Charging complete",
           "charging_problem": "Charging problem",
           "cleaning": "Cleaning",
@@ -253,14 +253,14 @@
           "docking": "Docking",
           "egg_attack": "Cupid mode",
           "emptying_the_bin": "Emptying the bin",
-          "error": "[%key:common::state::error%]",
+          "error": "Error",
           "going_to_target": "Going to target",
           "going_to_wash_the_mop": "Going to wash the mop",
-          "idle": "[%key:common::state::idle%]",
+          "idle": "Idle",
           "locked": "Locked",
           "manual_mode": "Manual mode",
           "mapping": "Mapping",
-          "paused": "[%key:common::state::paused%]",
+          "paused": "Paused",
           "remote_control_active": "Remote control active",
           "returning_home": "Returning home",
           "segment_cleaning": "Segment cleaning",
@@ -313,7 +313,7 @@
           "low_battery": "Low battery",
           "main_brush_jammed": "Main brush jammed",
           "mopping_roller_1": "Wash roller may be jammed",
-          "mopping_roller_2": "[%key:component::roborock::entity::sensor::vacuum_error::state::mopping_roller_1%]",
+          "mopping_roller_2": "Wash roller may be jammed",
           "mopping_roller_error_2": "Wash roller not lowered properly",
           "no_dustbin": "No dustbin",
           "nogo_zone_detected": "No-go zone detected",
@@ -354,7 +354,7 @@
           "drying_error_water_flow": "Check water flow",
           "heating_error": "Heating error",
           "inverter_error": "Inverter error",
-          "none": "[%key:component::roborock::entity::sensor::vacuum_error::state::none%]",
+          "none": "None",
           "refill_error": "Refill error",
           "spin_error": "Re-arrange clothes",
           "temperature_error": "Temperature error",
@@ -370,7 +370,7 @@
           "rinsing": "Rinsing",
           "soaking": "Soaking",
           "spinning": "Spinning",
-          "standby": "[%key:common::state::standby%]",
+          "standby": "Standby",
           "under_delay_start": "Delayed start",
           "washing": "Washing",
           "weighing": "Weighing"
@@ -410,18 +410,18 @@
         "state_attributes": {
           "fan_speed": {
             "state": {
-              "auto": "[%key:common::state::auto%]",
+              "auto": "Auto",
               "balanced": "Balanced",
-              "custom": "[%key:component::roborock::entity::select::mop_mode::state::custom%]",
+              "custom": "Custom",
               "gentle": "Gentle",
-              "max": "[%key:component::roborock::entity::select::mop_intensity::state::max%]",
+              "max": "Max",
               "max_plus": "Max plus",
-              "medium": "[%key:common::state::medium%]",
-              "off": "[%key:common::state::off%]",
+              "medium": "Medium",
+              "off": "Off",
               "quiet": "Quiet",
               "silent": "Silent",
-              "smart_mode": "[%key:component::roborock::entity::select::mop_mode::state::smart_mode%]",
-              "standard": "[%key:component::roborock::entity::select::mop_mode::state::standard%]",
+              "smart_mode": "Smart mode",
+              "standard": "Standard",
               "turbo": "Turbo"
             }
           }
@@ -535,7 +535,7 @@
           "name": "X-coordinate"
         },
         "y": {
-          "description": "[%key:component::roborock::services::set_vacuum_goto_position::fields::x::description%]",
+          "description": "Coordinates are relative to the dock. x=25500,y=25500 is the dock position.",
           "name": "Y-coordinate"
         }
       },
