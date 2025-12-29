@@ -81,13 +81,22 @@ class RoborockVacuum(RoborockCoordinatedEntityB01, StateVacuumEntity):
 
     @property
     def fan_speed(self) -> str | None:
-        """Return the fan speed of the vacuum cleaner."""
-        # Map the internal code to a readable string if possible, or return the raw value
-        # Assuming coordinator.data has a way to access current fan speed
-        # Based on Q7PropertiesApi, we set it via SCWindMapping.
-        # We need to find where the current value is stored in coordinator.data
-        # For now, let's try to access it from status if available
-        return getattr(self.coordinator.data, "fan_speed", None)
+        """Return the current fan speed of the vacuum."""
+        # The coordinator data exposes the raw wind value from the device
+        wind = getattr(self.coordinator.data, "wind", None)
+
+        # If the device does not report a wind value, fan speed is unknown
+        if wind is None:
+            return None
+
+        # When wind is a valid SCWindMapping enum, return its name
+        # which matches Home Assistant fan speed expectations
+        if isinstance(wind, SCWindMapping):
+            return wind.name
+
+        # Log a warning if an unexpected wind type is encountered
+        _LOGGER.warning("Unexpected wind type: %r (%s)", wind, type(wind))
+        return None
 
     @property
     def fan_speed_list(self) -> list[str]:

@@ -542,6 +542,7 @@ class RoborockB01Q7UpdateCoordinator(RoborockDataUpdateCoordinatorB01):
         self.request_protocols: list[RoborockB01Props] = [
             RoborockB01Props.STATUS,
             RoborockB01Props.MAIN_BRUSH,
+            RoborockB01Props.WIND,
             RoborockB01Props.SIDE_BRUSH,
             RoborockB01Props.DUST_BAG_USED,
             RoborockB01Props.MOP_LIFE,
